@@ -15,14 +15,50 @@ addEventListener("mousedown", (event) => {
 
 addEventListener("keydown", (event) => {
     let key = event.key;
-    console.log(typeof key);
-    console.log(key);
-    //event.preventDefault();
-    if (key >= 0 && key <= 9) {
-        console.log(key);
-        userInput(key);
-        wipeDisp();
+    let tempOp;
+   // event.preventDefault();
+
+    switch(true) {
+
+        case (key >= 0 && key <= 9):
+            userInput(key);
+            wipeDisp();
+            break;
+        
+        case (key === '+'):
+            tempOp = 'add';
+            break;
+        
+        case (key === '-'):
+            tempOp = 'sub';
+            break;
+        
+        case (key === '*'):
+            tempOp = 'mult';
+            break;
+
+        case (key === '/'):
+            tempOp = 'div';
+            break;
+
+        case (key.toLowerCase() === 'backspace'):
+            del();
+            break;
+
+        case (key === 'Enter'):
+            tempOp = 'eql';
+            break;
+
+        case (key === '.'):
+            tempOp = 'dec';
+            break;
+        
+        default:
+            break;
     }
+    operatorCase(tempOp);
+
+
 })
 
 
@@ -30,34 +66,17 @@ addEventListener("click", (event) => {
     let target = event.target;
     let id = target.id;
     //checks for a decimal in the displayed number
-    decChck(displayInt);
     //removes visual effect to buttons is depressed
     if (target.classList.contains('btn')) {
     btn.forEach(item => item.classList.remove('dark'));
     btn.forEach(item => item.classList.remove('light'));
 
-    let clickVal = parseFloat(target.innerText);
+    let clickVal = target.innerText;
 
     if (target.classList.contains('num')) {
-       userInput(clickVal);
-       /* // stores user input
-        let tempVal = parseFloat(target.innerText);
-
-        //prevents 0 from being added to start of displayInt
-        if (displayInt === 0) {
-            displayInt = tempVal;
-        } else {
-            //concatenates user input with displayed nummbers
-            displayInt = `${displayInt}${tempVal}`;
-            console.log(displayInt);
-            }
-        //this clears and repopulates the display
-        */
+        userInput(clickVal);
         wipeDisp();
-
-    
     } else if (target.classList.contains('op')) {
-        
         operatorCase(id);
     }}
 })
@@ -70,7 +89,6 @@ function userInput(input) {
     } else {
         //concatenates user input with displayed nummbers
         displayInt = `${displayInt}${tempVal}`;
-        console.log(displayInt);
         }}
 
 function equationChck(target) {
@@ -91,7 +109,6 @@ function wipeDisp() {
 }
 
 function operatorCase(target) {
-    console.log(target);
     switch(target) {
         case 'add':
         case 'sub':
@@ -99,16 +116,12 @@ function operatorCase(target) {
         case 'div':
 //checks for first number to form equation, if it exists, allows user to string
 //calculations together i.e. 1 + 4 - 3 * 6
-            if (firstInt == false) {
+           if (firstInt != false) {
+                operatorCase('eql');
+            }
             operator = target;
             firstInt = displayInt;
             displayInt = 0;
-            } else if (firstInt != false) {
-                operatorCase('eql');
-                operator = target;
-                firstInt = displayInt;
-                displayInt = 0;
-            }
             break;
 
         case 'clr':
@@ -124,16 +137,16 @@ function operatorCase(target) {
             secondInt = displayInt;
             displayInt = operate(firstInt, operator, secondInt);
             firstInt = false;
-            console.log(firstInt);
-            console.log(secondInt);
-            console.log(displayInt);
             operator = false;
             wipeDisp();
             }
+            decChck(displayInt);
+            console.log(displayInt);
             break;
 
         case 'dec':
             dec();
+            decSwtch = true;
             wipeDisp();
             break;
 
@@ -148,24 +161,34 @@ function operatorCase(target) {
             break;
 
         case 'del':
-            displayInt = displayInt.slice(0, -1);
-            wipeDisp();
+            del();
+            break;
+
+        default:
             break;
             
     }
 }
 
+function del() {
+    if (displayInt === 'undefined'){
+        displayInt = 0;
+    } else {
+    displayInt = displayInt.slice(0, -1);
+    }
+    wipeDisp();
+}
 
+//adds decimal to displayed number
 function dec() {
     if (decSwtch == false) {
         displayInt = `${displayInt}.`;
-        console.log(displayInt);
-
     } else if (decSwtch == false && displayInt == 0) {
         displayInt = '0.';
     }
 }
 
+//checks for decimal in displayed number
 function decChck(target) {
     if (target % 1 != 0) {
         decSwtch = true;
@@ -174,16 +197,10 @@ function decChck(target) {
     }
 }
 
-function opChck() {
-    if (operator == false) {
-        displayInt = 0;
-        wipeDisp();
-    }
-}
-
 
 //these are the math functions
 function add(frstInt, scndInt) {
+    //parseFloat prevents string concatenation
     let total = parseFloat(frstInt) + parseFloat(scndInt);
     return total;
 }
@@ -212,14 +229,13 @@ let firstInt = false;
 let secondInt = false;
 let operator = false;
 let displayInt = 0;
+wipeDisp();
 let decSwtch = false;
-
-
 
 function operate(frstInt, op, scndInt) {
     switch (op){
         case 'add':
-            return parseFloat(add(frstInt, scndInt));
+            return add(frstInt, scndInt);
         
         case 'sub':
             return parseFloat(subtract(frstInt, scndInt));
@@ -228,10 +244,12 @@ function operate(frstInt, op, scndInt) {
             return parseFloat(multiply(frstInt, scndInt));
 
         case 'div':
+            //prevents divide by 0
             if (scndInt === 0) {
                 return 'id10T ERROR';
             } else {
                 let total = parseFloat(divide(frstInt, scndInt));
+            //rounds to 6 decimal places
             return +total.toFixed(6);
             }
 
