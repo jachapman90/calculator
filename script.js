@@ -13,6 +13,17 @@ addEventListener("mousedown", (event) => {
     }
 })
 
+addEventListener("keydown", (event) => {
+    let key = event.key;
+    console.log(typeof key);
+    console.log(key);
+    //event.preventDefault();
+    if (key >= 0 && key <= 9) {
+        console.log(key);
+        userInput(key);
+        wipeDisp();
+    }
+})
 
 
 addEventListener("click", (event) => {
@@ -25,8 +36,11 @@ addEventListener("click", (event) => {
     btn.forEach(item => item.classList.remove('dark'));
     btn.forEach(item => item.classList.remove('light'));
 
+    let clickVal = parseFloat(target.innerText);
+
     if (target.classList.contains('num')) {
-        // stores user input
+       userInput(clickVal);
+       /* // stores user input
         let tempVal = parseFloat(target.innerText);
 
         //prevents 0 from being added to start of displayInt
@@ -38,7 +52,8 @@ addEventListener("click", (event) => {
             console.log(displayInt);
             }
         //this clears and repopulates the display
-            wipeDisp();
+        */
+        wipeDisp();
 
     
     } else if (target.classList.contains('op')) {
@@ -46,6 +61,17 @@ addEventListener("click", (event) => {
         operatorCase(id);
     }}
 })
+
+function userInput(input) {
+    let tempVal = input;
+    //prevents 0 from being added to start of displayInt
+    if (displayInt === 0) {
+        displayInt = tempVal;
+    } else {
+        //concatenates user input with displayed nummbers
+        displayInt = `${displayInt}${tempVal}`;
+        console.log(displayInt);
+        }}
 
 function equationChck(target) {
     if (operator == 'add' || operator == 'sub' || operator == 'mult' || 
@@ -124,6 +150,7 @@ function operatorCase(target) {
         case 'del':
             displayInt = displayInt.slice(0, -1);
             wipeDisp();
+            break;
             
     }
 }
@@ -193,15 +220,12 @@ function operate(frstInt, op, scndInt) {
     switch (op){
         case 'add':
             return parseFloat(add(frstInt, scndInt));
-            break;
         
         case 'sub':
             return parseFloat(subtract(frstInt, scndInt));
-            break;
 
         case 'mult':
             return parseFloat(multiply(frstInt, scndInt));
-            break;
 
         case 'div':
             if (scndInt === 0) {
@@ -210,7 +234,6 @@ function operate(frstInt, op, scndInt) {
                 let total = parseFloat(divide(frstInt, scndInt));
             return +total.toFixed(6);
             }
-            break;
 
     }   
 }
