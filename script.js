@@ -37,10 +37,9 @@ addEventListener("click", (event) => {
             displayInt = `${displayInt}${tempVal}`;
             console.log(displayInt);
             }
-        //this clears the display
+        //this clears and repopulates the display
             wipeDisp();
-        //this populates the display
-            popDisp();
+
     
     } else if (target.classList.contains('op')) {
         
@@ -60,9 +59,6 @@ function equationChck(target) {
 function wipeDisp() {
     while (disp.firstChild) {
     disp.removeChild(disp.firstChild);}
-}
-
-function popDisp() {
     const p = document.createElement('p');
     p.textContent = displayInt;
     disp.appendChild(p);
@@ -90,12 +86,11 @@ function operatorCase(target) {
             break;
 
         case 'clr':
-            wipeDisp();
             displayInt = 0;
             firstInt = false;
             secondInt = false;
             decSwtch = false;
-            popDisp();
+            wipeDisp();
             break;
 
         case 'eql':
@@ -108,32 +103,27 @@ function operatorCase(target) {
             console.log(displayInt);
             operator = false;
             wipeDisp();
-            popDisp();
             }
             break;
 
         case 'dec':
             dec();
             wipeDisp();
-            popDisp();
             break;
 
         case 'perc':
-            wipeDisp();
             displayInt = displayInt / 100;
-            popDisp();
+            wipeDisp();
             break;
 
         case 'plsMns':
             displayInt = displayInt * -1;
             wipeDisp();
-            popDisp();
             break;
 
         case 'del':
             displayInt = displayInt.slice(0, -1);
             wipeDisp();
-            popDisp();
             
     }
 }
@@ -161,7 +151,6 @@ function opChck() {
     if (operator == false) {
         displayInt = 0;
         wipeDisp();
-        popDisp();
     }
 }
 
@@ -219,7 +208,7 @@ function operate(frstInt, op, scndInt) {
                 return 'id10T ERROR';
             } else {
                 let total = parseFloat(divide(frstInt, scndInt));
-            return total.toFixed(6);
+            return +total.toFixed(6);
             }
             break;
 
