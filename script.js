@@ -18,6 +18,7 @@ addEventListener("mousedown", (event) => {
 addEventListener("click", (event) => {
     let target = event.target;
     let id = target.id;
+    //checks for a decimal in the displayed number
     decChck(displayInt);
     //removes visual effect to buttons is depressed
     if (target.classList.contains('btn')) {
@@ -128,7 +129,11 @@ function operatorCase(target) {
             wipeDisp();
             popDisp();
             break;
-            
+
+        case 'del':
+            displayInt = displayInt.slice(0, -1);
+            wipeDisp();
+            popDisp();
             
     }
 }

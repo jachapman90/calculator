@@ -16,10 +16,6 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-s}
-
-#zero {
-    width: 49%;
 }
 
 #buttons {
@@ -42,7 +38,7 @@ s}
 
 }
 
-#dec {
+#dec, #del {
     background-color: #f7f00c;
     color: black;
 }
